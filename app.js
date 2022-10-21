@@ -1,5 +1,5 @@
 var router = require("./router.js");
-//Problem: We need a simple way to look at a user's badge count and JavaScript point from a web browser
+//Problem: I need a simple way to look at a user's badge count and JavaScript point from a web browser
 //Solution: Use Node.js to perform the profile look ups and server our template via HTTP
 
 //Create a web server
@@ -11,9 +11,6 @@ http.createServer(function (request, response) {
 console.log('Server running at http://<workspace-url>/');
 
 
-//Function that handles the reading of files and merge in value
-  // read from file and get a string
-    // merge values in to string
 
 
 

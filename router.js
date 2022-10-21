@@ -1,14 +1,16 @@
-var Profile = require("./profile.js");
+var Profile = require("./profile.js")
+var renderer = require("./renderer.js")
 
 //Handle HTTP route GET / and POST / i.e. Home
 function home(request, response) {
   //if url == "/" && GET
   if(request.url === "/") {
     //show search
-    response.writeHead(200, {'Content-Type': 'text/plain'});  
-    response.write("Header\n");
-    response.write("Search\n");
-    response.end('Footer\n');
+    response.writeHead(200, {'Content-Type': 'text/plain'})
+    renderer.view("header", {}, response)
+    renderer.view("search", {}, response)
+    renderer.view("footer", {}, response)
+    response.end()
   }
   //if url == "/" && POST
     //redirect to /:username
@@ -17,13 +19,13 @@ function home(request, response) {
 //Handle HTTP route GET /:username i.e. /chalkers
 function user(request, response) {
   //if url == "/...."
-  var username = request.url.replace("/", "");
+  var username = request.url.replace("/", "")
   if(username.length > 0) {
-    response.writeHead(200, {'Content-Type': 'text/plain'});  
-    response.write("Header\n");
+    response.writeHead(200, {'Content-Type': 'text/plain'})  
+    renderer.view("header", {}, response)
     
     //get json from Treehouse
-    var studentProfile = new Profile(username);
+    var studentProfile = new Profile(username)
     //on "end"
     studentProfile.on("end", function(profileJSON){
       //show profile
@@ -36,22 +38,24 @@ function user(request, response) {
         javascriptPoints: profileJSON.points.JavaScript
       }
       //Simple response
-      response.write(values.username + " has " + values.badges + " badges\n");
-      response.end('Footer\n');
-    });
-        
+      renderer.view("profile", values, response)
+      renderer.view("footer", {}, response)
+      response.end()
+    })
+    
     //on "error"
     studentProfile.on("error", function(error){
       //show error
-      response.write(error.message + "\n");
-      response.end('Footer\n');
-    });
-      
+      renderer.view("error", {errorMessage: error.message}, response)
+      renderer.view("search", {}, response)
+      renderer.view("footer", {}, response)
+      response.end()
+    })  
   }
 }
 
-module.exports.home = home;
-module.exports.user = user;
+module.exports.home = home
+module.exports.user = user
 
 
 
